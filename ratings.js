@@ -21,40 +21,42 @@ var Ratings = (function () {
     };
     Ratings.prototype.prompt = function () {
         var _this = this;
-        if (this.configuration.showNow || this.showCount == this.configuration.showOnCount) {
-            setTimeout(function () {
-                Dialogs.confirm({
-                    title: _this.configuration.title,
-                    message: _this.configuration.text,
-                    okButtonText: _this.configuration.agreeButtonText,
-                    cancelButtonText: _this.configuration.declineButtonText,
-                    neutralButtonText: _this.configuration.remindButtonText
-                }).then(function (result) {
-                    if (result == true) {
-                        var appStore = "";
-                        if (Application.android) {
-                            var androidPackageName = _this.configuration.androidPackageId ? _this.configuration.androidPackageId : Application.android.packageName;
-                            var uri = android.net.Uri.parse("market://details?id=" + androidPackageName);
-                            var myAppLinkToMarket = new android.content.Intent(android.content.Intent.ACTION_VIEW, uri);
-                            // Launch the PlayStore
-                            Application.android.foregroundActivity.startActivity(myAppLinkToMarket);
+        if (!this.hasRated()) {
+            if (this.configuration.showNow || this.showCount == this.configuration.showOnCount) {
+                setTimeout(function () {
+                    Dialogs.confirm({
+                        title: _this.configuration.title,
+                        message: _this.configuration.text,
+                        okButtonText: _this.configuration.agreeButtonText,
+                        cancelButtonText: _this.configuration.declineButtonText,
+                        neutralButtonText: _this.configuration.remindButtonText
+                    }).then(function (result) {
+                        if (result == true) {
+                            var appStore = "";
+                            if (Application.android) {
+                                var androidPackageName = _this.configuration.androidPackageId ? _this.configuration.androidPackageId : Application.android.packageName;
+                                var uri = android.net.Uri.parse("market://details?id=" + androidPackageName);
+                                var myAppLinkToMarket = new android.content.Intent(android.content.Intent.ACTION_VIEW, uri);
+                                // Launch the PlayStore
+                                Application.android.foregroundActivity.startActivity(myAppLinkToMarket);
+                            }
+                            else if (Application.ios) {
+                                appStore = "itms-apps://itunes.apple.com/en/app/id" + _this.configuration.iTunesAppId;
+                            }
+                            Utility.openUrl(appStore);
+                            //save has rated app
+                            ApplicationSettings.setNumber('HAS_RATED_' + _this.configuration.id, 1);
                         }
-                        else if (Application.ios) {
-                            appStore = "itms-apps://itunes.apple.com/en/app/id" + _this.configuration.iTunesAppId;
+                        else if (result == false) {
+                            // Decline
                         }
-                        Utility.openUrl(appStore);
-                        //save has rated app
-                        ApplicationSettings.setNumber('HAS_RATED_' + _this.configuration.id, 1);
-                    }
-                    else if (result == false) {
-                        // Decline
-                    }
-                    else {
-                        //Remind later
-                        ApplicationSettings.setNumber(_this.configuration.id, 0);
-                    }
+                        else {
+                            //Remind later
+                            ApplicationSettings.setNumber(_this.configuration.id, 0);
+                        }
+                    });
                 });
-            });
+            }
         }
     };
     Ratings.prototype.hasRated = function () {

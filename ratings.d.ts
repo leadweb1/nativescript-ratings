@@ -4,10 +4,13 @@ declare module "nativescript-ratings" {
         constructor(configuration: IConfiguration);
         init();
         prompt();
+        hasRated();
+        reset();
     }
 
     export interface IConfiguration {
         id?: string;
+        showNow?: boolean;
         showOnCount?: number;
         title: string;
         text?: string;

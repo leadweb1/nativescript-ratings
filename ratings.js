@@ -48,7 +48,8 @@ var Ratings = (function () {
                             ApplicationSettings.setNumber('HAS_RATED_' + _this.configuration.id, 1);
                         }
                         else if (result == false) {
-                            // Decline
+                            // Decline         
+                            ApplicationSettings.setNumber('HAS_RATED_' + _this.configuration.id, 1);
                         }
                         else {
                             //Remind later

@@ -66,7 +66,8 @@ export class Ratings {
                             //save has rated app
                             ApplicationSettings.setNumber('HAS_RATED_' + this.configuration.id, 1);
                         } else if (result == false) {
-                            // Decline
+                            // Decline         
+                             ApplicationSettings.setNumber('HAS_RATED_' + this.configuration.id, 1);
                         } else {
                             //Remind later
                             ApplicationSettings.setNumber(this.configuration.id, 0);

@@ -34,9 +34,11 @@ export class Ratings {
     }
 
     init() {
-        this.showCount = ApplicationSettings.getNumber(this.configuration.id, 0);
-        this.showCount++;
-        ApplicationSettings.setNumber(this.configuration.id, this.showCount);
+        if(!this.hasRated()) {
+            this.showCount = ApplicationSettings.getNumber(this.configuration.id, 0);
+            this.showCount++;
+            ApplicationSettings.setNumber(this.configuration.id, this.showCount);
+        }
     }
 
     prompt() {
@@ -67,7 +69,7 @@ export class Ratings {
                             ApplicationSettings.setNumber('HAS_RATED_' + this.configuration.id, 1);
                         } else if (result == false) {
                             // Decline         
-                             ApplicationSettings.setNumber('HAS_RATED_' + this.configuration.id, 1);
+                            ApplicationSettings.setNumber('HAS_RATED_' + this.configuration.id, 1);
                         } else {
                             //Remind later
                             ApplicationSettings.setNumber(this.configuration.id, 0);
